@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="Личное цифровое письмо ко дню рождения — 17 сентября 2026 года.">
+<title>Письмо для Кристины Александровны — 17.09.2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div>
+<div class="ambient ambient--one" aria-hidden="true"></div><div class="ambient ambient--two" aria-hidden="true"></div>
+<header class="chrome">
+  <button class="date-mark" id="homeBtn" type="button">17 / 09 / 26</button>
+  <div class="chrome-center">личное письмо</div>
+  <div class="counter" id="counter">01 / 14</div>
+</header>
+<main id="story" tabindex="-1" aria-live="polite">
+<section class="screen is-active" data-screen="1" data-label="Вступление">
+  <div class="screen-inner hero-inner">
+    <div class="intro-mark">письмо № 01</div><div class="eyebrow">не обычное поздравление</div>
+    <h1>У меня есть<br><em>кое-что,</em><br>что я давно хотел сказать.</h1>
+    <p class="subcopy">17 сентября 2026 · несколько страниц, адресованных одному человеку.</p>
+    <button class="primary-btn js-next">Открыть <span>→</span></button>
+  </div><div class="screen-footer"><span>от Юсуфа</span><span>нажмите, чтобы продолжить</span></div>
+</section>
+
+<section class="screen" data-screen="2" data-label="После школы"><div class="screen-inner split-intro">
+  <div><div class="eyebrow">02 / после школы</div><h2>Иногда только<br>после окончания<br>чего-то начинаешь<br><em>понимать его цену.</em></h2></div>
+  <div class="prose-column"><p>Новый этап. Новый колледж. Новые люди. Новые обстоятельства.</p><p>И только спустя время я начал особенно ясно замечать то, что раньше казалось обычным.</p><div class="hairline"></div><p class="large-note">Я начал понимать, насколько важными для меня были некоторые люди.</p><button class="text-btn js-next">Продолжить <span>→</span></button></div>
+</div></section>
+
+<section class="screen" data-screen="3" data-label="Вам лично"><div class="screen-inner centered-screen">
+  <div class="eyebrow">03 / вам лично</div><div class="serif-quote">«И среди всех воспоминаний я особенно отчётливо вспоминаю одного человека.»</div>
+  <p class="center-copy">С 6 по 9 класс Вы были моей классной руководительницей.</p><p class="center-copy">Но это письмо — не про школу и не про наш класс.</p><p class="center-copy strong">Оно про Вас.</p><button class="primary-btn js-next">Дальше <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="4" data-label="Четыре года"><div class="screen-inner timeline-screen">
+  <div class="section-head"><div><div class="eyebrow">04 / четыре года</div><h2>Давайте вспомним наши лучшие дни<br><em>Хроника времени.</em></h2></div><p>Нажимайте на год — это лишь визуальная точка отсчёта.</p></div>
+  <div class="timeline" id="timeline">
+    <button class="year active" data-year="6">06<small>класс</small></button><button class="year" data-year="7">07<small>класс</small></button><button class="year" data-year="8">08<small>класс</small></button><button class="year" data-year="9">09<small>класс</small></button>
+  </div>
+  <div class="timeline-detail" id="timelineDetail"><div class="timeline-number">06</div><div><h3>Начало истории</h3><p>Начало</p></div></div>
+  <button class="text-btn js-next">Открыть фотографии <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="5" data-label="Фотохроника"><div class="screen-inner chronology-screen">
+  <div class="section-head"><div><div class="eyebrow">05 / фотохроника</div><h2>6 → 9 класс<br><em>в фотографиях.</em></h2></div><p>Листайте годы кнопками ниже. Каждая фотография здесь — отдельная точка воспоминания.</p></div>
+  <div class="year-switch"><button class="photo-year active" data-photo-year="6">6 класс</button><button class="photo-year" data-photo-year="7">7 класс</button><button class="photo-year" data-photo-year="8">8 класс</button><button class="photo-year" data-photo-year="9">9 класс</button></div>
+  <div class="chronicle-stage">
+    <button class="photo-arrow photo-prev" aria-label="Предыдущее фото">←</button>
+    <figure class="chronicle-card" id="chronicleCard"><img id="chronicleImage" src="images/chronicle01.jpg" alt="Фотография из фотохроники"><figcaption><span id="chronicleMeta">6 класс · 01</span><strong id="chronicleCaption">Тогда всё только начиналось. Я прекрасно помню, как мы приходили к Вам за учебниками... Тогда я ещё был очень стеснительным.</strong><small id="chronicleHint">Нажмите на фотографию, чтобы открыть её.</small></figcaption></figure>
+    <button class="photo-arrow photo-next" aria-label="Следующее фото">→</button>
+  </div>
+  <div class="photo-dots" id="photoDots"></div>
+  <button class="text-btn js-next">Ещё фотографии <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="6" data-label="Фото рядом"><div class="screen-inner photo-story-screen">
+  <div class="section-head"><div><div class="eyebrow">06 / воспоминание</div><h2>Фотографии<br>могут сказать <em>больше слов.</em></h2></div></div>
+  <div class="photo-pair-grid">
+    <figure class="story-photo p1"><img src="images/together1.jpg" alt="Вместе"><figcaption><b>01</b><span>Это лучший учитель в мире</span></figcaption></figure>
+    <figure class="story-photo p2"><img src="images/teacher1.jpg" alt="Она"><figcaption><b>02</b><span>А это ее ученики</span></figcaption></figure>
+    <figure class="story-photo p3"><img src="images/class1.jpg" alt="Вместе с классом"><figcaption><b>03</b><span></span></figcaption></figure>
+  </div>
+  <button class="text-btn js-next">Дальше <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="7" data-label="Я помню"><div class="screen-inner memories-screen">
+  <div class="section-head"><div><div class="eyebrow">07 / я помню</div><h2>Маленькие вещи<br>иногда остаются <em>надолго.</em></h2></div></div>
+  <div class="memory-cards" id="memoryCards">
+    <button class="memory-card" data-memory="Вы всегда слушали наши жалобы и помогали нам"><span>01</span><strong>Выслушивали меня.</strong><i>+</i></button>
+    <button class="memory-card" data-memory="Я всегда вам показывал свои проекты и вы всегда восхищались"><span>02</span><strong>Интересовались мной.</strong><i>+</i></button>
+    <button class="memory-card" data-memory="Сколько же часов вы потратили чтобы слушать мои рассказы про Linux, игры и прогулки. Вы действительно стали тем взрослым с которым я на одной волне. "><span>03</span><strong>Слушали мои рассказы.</strong><i>+</i></button>
+    <button class="memory-card" data-memory="Вы всегда говорите, что я стану крутым айтишником в тот момент когда я сам в себя не верю. И даже до сих пор когда мне плохо я пишу вам и знаю, что вы поможете мне"><span>04</span><strong>Поддерживали.</strong><i>+</i></button>
+    <button class="memory-card memory-card--wide" data-memory="Тогда для меня это был просто обычный разговор. Я что-то рассказывал, Вы слушали, задавали вопросы, и потом мы просто разошлись по своим делам. Я даже не думал что буду очень скучать по этому."><span>05</span><strong>Обычный момент стал важным.</strong><i>+</i></button>
+  </div><div class="memory-toast" id="memoryToast"></div><button class="text-btn js-next">Продолжить <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="8" data-label="Что осталось"><div class="screen-inner word-cloud-screen">
+  <div class="eyebrow">08 / что осталось после школы</div><h2>Некоторые слова<br>человека остаются<br><em>внутри нас.</em></h2>
+  <div class="floating-words" aria-hidden="true"><span>внимание</span><span>терпение</span><span>интерес</span><span>поддержка</span><span>доверие</span><span>тепло</span><span>разговоры</span><span>память</span></div>
+  <div class="reveal-sentence" id="revealSentence"><button class="outline-btn" id="revealWords">Нажмите, чтобы открыть мысль</button><p>Я понял, что скучаю не по прошлому как таковому. Я скучаю по людям, рядом с которыми мне было хорошо. И Вы — один из таких людей.</p></div>
+  <button class="text-btn js-next">Дальше <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="9" data-label="Linux / IT"><div class="screen-inner terminal-screen">
+  <div class="terminal-card"><div class="terminal-bar"><span class="dots"><b></b><b></b><b></b></span><span>memories / bash</span><span>read-only</span></div><div class="terminal-body" id="terminalBody">
+    <p><span>$</span> whoami</p><p class="out">Yusuf</p><p><span>$</span> ls interests/</p><p class="out">Linux &nbsp; Cybersecurity &nbsp; Programming &nbsp; CTF</p><p><span>$</span> cat memories/teacher.txt</p><p class="out quote">«Она действительно слушала всё это.»</p><p class="cursor-line"><span>$</span> <i class="cursor"></i></p>
+  </div><button class="terminal-run" id="terminalRun">$ открыть ещё одну строчку</button></div>
+  <div class="terminal-caption"><div class="eyebrow">09 / маленькая пасхалка</div><h2>Наверное, Вам даже не представлялось, насколько много значило то, что Вы <em>слушали.</em></h2><button class="text-btn js-next">Продолжить <span>→</span></button></div>
+</div></section>
+
+<section class="screen" data-screen="10" data-label="Большое письмо"><div class="screen-inner letter-screen"><div class="letter-meta"><span>10 / личное письмо</span><span>17.09.2026</span></div>
+  <article class="letter-paper long-letter"><div class="letter-rule"></div><h2>Есть вещи,<br>которые лучше<br><em>сказать лично.</em></h2>
+    <div class="editable-letter"><p>Дорогая, Кристина Александровна,
+я довольно долго думал, что именно хочу Вам сказать. Обычного «с днём рождения» мне почему-то оказалось мало. Хотелось сказать что-то действительно личное, то, что я, возможно, не смог бы нормально сказать просто при встрече. </p><p>Когда я закончил 9 класс, мне казалось, что я просто иду дальше. Новый колледж, новые люди, новые обстоятельства, совершенно другая жизнь. Я не думал, что спустя какое-то время начну по-другому смотреть на то, что осталось позади.И только потом я начал замечать одну вещь. Мне запомнились не какие-то большие события. Не отдельные уроки и не школьные будни сами по себе. Мне запомнились люди и то, как я чувствовал себя рядом с ними. И среди этих людей Вы занимаете для меня очень особенное место.</p><p>Мне особенно запомнилось то, что Вам действительно было интересно то, чем я занимаюсь. Я мог рассказывать про компьютеры, Linux, какие-то свои проекты, идеи, то, что изучаю, а иногда, наверное, и вовсе слишком долго говорить об этом. Но Вы слушали. И, возможно, со стороны это кажется совсем маленькой вещью. Для меня нет. Потому что когда человеку действительно интересны твои увлечения, ты начинаешь чувствовать, что и сам становишься немного важнее. Что то, чем ты занимаешься, кому-то ещё не безразлично. Сейчас я понимаю, насколько ценным для меня было это ощущение.</p><p>После 9 класса многое изменилось. У меня началась совершенно другая жизнь, появились новые люди, как вы помните не очень умные, новые цели, новые вещи, которым я учусь. И, наверное, именно поэтому я теперь могу посмотреть назад немного со стороны. Тогда я просто считал многие вещи обычными. Ваше внимание, наши разговоры, возможность что-то рассказать, обратиться к Вам, знать, что меня выслушают. Сейчас я понимаю, что это вовсе не было чем-то само собой разумеющимся.</p><p>Поэтому я хочу сказать Вам спасибо.</p><p>Не просто спасибо за то, что Вы были моей классной руководительницей. А спасибо именно Вам как человеку который стал очень важной частью моей жизни, спасибо за внимание, за терпение, за разговоры, за интерес к тому, чем я увлекался, и за то, что рядом с Вами я мог оставаться собой. Наверное, самое главное, что я понял уже после окончания школы: иногда человек может значить для тебя гораздо больше, чем ты способен понять в тот момент.
+И я очень рад, что в моей жизни был такой человек.</p><p>С днём рождения, Кристина Александровна. Я искренне желаю Вам побольше спокойных и счастливых дней, людей, которые будут ценить Вас так же искренне, как ценю Вас я, и чтобы всё хорошее, что Вы когда-то отдавали другим, обязательно возвращалось к Вам.</p></div><div class="letter-sign">Ваш будущий крутой айтишник, Юсуф</div>
+  </article><button class="text-btn js-next letter-next">Ещё несколько слов <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="11" data-label="Спасибо"><div class="screen-inner thanks-screen"><div class="eyebrow">11 / спасибо</div><h2>Спасибо вам, не за одну большую вещь.<br>А за <em>много маленьких.</em></h2><div class="thanks-stack" id="thanksStack"><button>За внимание <span>+</span></button><button>За терпение <span>+</span></button><button>За поддержку <span>+</span></button><button>За то, что слушали <span>+</span></button><button>За интерес к тому, чем я живу <span>+</span></button><button>За то, что были рядом <span>+</span></button></div><p class="thanks-final" id="thanksFinal">Нажмите на слова — пусть они постепенно соберутся в одну мысль.</p><button class="text-btn js-next">Дальше <span>→</span></button></div></section>
+
+<section class="screen" data-screen="12" data-label="Небольшая пауза"><div class="screen-inner pause-screen"><div class="eyebrow">12 / перед финалом</div><div class="pause-line">Иногда благодарность приходит<br>не сразу.</div><p>Иногда нужно уйти дальше, чтобы оглянуться назад и понять, что именно стало частью тебя.</p><div class="breathing-orb"></div><button class="primary-btn js-next">Я хочу сказать ещё одну вещь <span>→</span></button></div></section>
+ 
+<section class="screen" data-screen="13" data-label="Поздравление"><div class="screen-inner birthday-screen"><div class="eyebrow">13 / сегодня</div><div class="birthday-line"><span>И сегодня я просто хочу сказать:</span></div><h2>С днём<br><em>рождения.</em></h2><button class="reveal-btn" id="revealGreeting">Открыть поздравление</button><div class="greeting-reveal" id="greetingReveal" aria-hidden="true"><p>Пусть впереди будет много спокойных, тёплых дней, людей рядом и моментов, которыми хочется дорожить.</p><p>Пусть всё хорошее, что Вы однажды отдавали другим, возвращается к Вам в самых неожиданных и добрых формах.</p><button class="text-btn js-next">Открыть последнюю страницу <span>→</span></button></div></div></section>
+
+<section class="screen" data-screen="14" data-label="Финал"><div class="screen-inner final-screen"><div class="final-photo"><img src="images/final.jpg" alt="Главная фотография для финала" onerror="this.style.display='none';this.parentElement.classList.add('placeholder-photo')"><span>images/final.jpg</span></div><div class="final-copy"><div class="eyebrow">14 / последняя страница</div><h2>Спасибо за то,<br>что однажды<br><em>стали частью моей жизни.</em></h2><p>Я надеюсь, что Вы всегда будете знать: есть люди, которые спустя годы всё ещё помнят Вас с огромной благодарностью.</p><div class="signature"><span>С благодарностью,</span><strong>Юсуф</strong><small>17 сентября 2026</small></div><button class="restart-btn" id="restartBtn">↺ Пройти письмо ещё раз</button></div></div></section>
+</main>
+<nav class="story-nav" aria-label="Навигация по письму"><button class="nav-btn" id="prevBtn">←</button><div class="progress-track"><span id="progressFill"></span></div><button class="nav-btn" id="nextBtn">→</button></nav>
+<button class="sound-btn" id="soundBtn" aria-pressed="false">♪</button><audio id="ambientAudio" src="audio/ambient.mp3" loop preload="none"></audio>
+<div class="lightbox" id="lightbox" aria-hidden="true"><button class="lightbox-close" id="lightboxClose">×</button><img id="lightboxImage" alt="Увеличенная фотография"><div id="lightboxCaption"></div></div>
+<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+<script src="script.js"></script>
+</body></html>
