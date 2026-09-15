@@ -11,6 +11,48 @@
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
+  // Небольшая пауза перед письмом: экран исчезает только после загрузки страницы.
+  const loadingScreen = document.getElementById('loadingScreen');
+  const coverOpen = document.getElementById('coverOpen');
+  let loaderHidden = false;
+
+  function hideLoader() {
+    if (loaderHidden || !loadingScreen) return;
+    loaderHidden = true;
+
+    window.setTimeout(() => {
+      loadingScreen.classList.add('is-hidden');
+      window.setTimeout(() => loadingScreen.remove(), reduced ? 20 : 650);
+    }, reduced ? 0 : 850);
+  }
+
+  function markCoverReady() {
+    if (!loadingScreen) return;
+    loadingScreen.classList.add('is-ready');
+    if (coverOpen) coverOpen.disabled = false;
+  }
+
+  if (document.readyState === 'complete') {
+    markCoverReady();
+  } else {
+    window.addEventListener('load', markCoverReady, { once: true });
+    window.setTimeout(markCoverReady, 5000);
+  }
+
+  coverOpen?.addEventListener('click', () => {
+    if (loaderHidden) return;
+    loadingScreen.classList.add('is-opening');
+    coverOpen.disabled = true;
+    window.setTimeout(hideLoader, reduced ? 40 : 720);
+  });
+
+  loadingScreen?.addEventListener('click', event => {
+    if (event.target === loadingScreen && coverOpen && !coverOpen.disabled) {
+      coverOpen.click();
+    }
+  }
+  );
+
   const counter = document.getElementById('counter');
   const fill = document.getElementById('progressFill');
   const prevBtn = document.getElementById('prevBtn');
@@ -94,6 +136,7 @@
     const old = screens[current];
     const nextScreen = screens[index];
 
+    nextScreen.classList.remove('is-visible');
     nextScreen.style.transformOrigin =
       dir > 0 ? '100% 50%' : '0 50%';
 
@@ -107,6 +150,15 @@
 
     old.classList.remove('is-active', 'exit');
     nextScreen.style.transformOrigin = '';
+    nextScreen.classList.add('is-visible');
+
+    if (old.dataset.screen === 'time-lapse') {
+      stopMemoryReel();
+    }
+
+    if (nextScreen.dataset.screen === 'time-lapse') {
+      startMemoryReel();
+    }
 
     locked = false;
 
@@ -172,7 +224,7 @@
 
     if (
       event.key === ' ' &&
-      current === 12
+      current === 13
     ) {
       event.preventDefault();
 
@@ -305,6 +357,173 @@
     });
 
   // -------------------------
+  // FOUR YEARS / 40 SECONDS
+  // -------------------------
+
+  const reelFolder = 'assets/timeline/';
+  const reelFallback = [
+    'images/chronicle01.jpg', 'images/chronicle02.jpg', 'images/chronicle03.jpg',
+    'images/chronicle04.jpg', 'images/chronicle05.jpg', 'images/chronicle06.jpg',
+    'images/chronicle07.jpg', 'images/chronicle08.jpg', 'images/chronicle09.jpg',
+    'images/chronicle10.jpg', 'images/chronicle11.jpg', 'images/chronicle12.jpg',
+    'images/chronicle13.jpg', 'images/chronicle14.jpg', 'images/chronicle15.jpg',
+    'images/chronicle16.jpg', 'images/chronicle17.jpg', 'images/chronicle18.jpg'
+  ];
+  const reelStages = ['06', '07', '08', '09'];
+
+  const reelFrameInterval = 720;
+  let reelFrames = reelFallback.map((src, frameIndex) => ({ src, frameIndex }));
+
+  const reelStage = document.getElementById('memoryReelStage');
+  const reelImage = document.getElementById('reelImage');
+  const reelImageNext = document.getElementById('reelImageNext');
+  const reelTrackFill = document.getElementById('reelTrackFill');
+  const reelDurationSeconds = document.getElementById('reelDurationSeconds');
+  const reelEnding = document.getElementById('reelEnding');
+  const reelControls = [...document.querySelectorAll('.reel-control')];
+  let reelIndex = 0;
+  let reelTimer = null;
+  let reelFinished = false;
+  let activeReelImage = reelImage;
+  let reelProgressFrame = null;
+  let reelStartedAt = 0;
+  let reelProgressActive = false;
+  let reelTotalDuration = reelFrames.length * reelFrameInterval;
+
+  function getReelStageIndex(index) {
+    return Math.min(
+      reelStages.length - 1,
+      Math.floor((index / Math.max(1, reelFrames.length)) * reelStages.length)
+    );
+  }
+
+  async function findFlatFrames() {
+    const frames = [];
+
+    for (let number = 1; number <= 200; number += 1) {
+      const src = `${reelFolder}${String(number).padStart(2, '0')}.jpg`;
+      const found = await new Promise(resolve => {
+        const probe = new Image();
+        probe.onload = () => resolve(true);
+        probe.onerror = () => resolve(false);
+        probe.src = src;
+      });
+
+      if (!found) break;
+      frames.push({ src, frameIndex: number - 1 });
+    }
+
+    return frames.length ? frames : reelFallback.map((src, frameIndex) => ({ src, frameIndex }));
+  }
+
+  async function loadReelFrames() {
+    reelFrames = await findFlatFrames();
+    reelTotalDuration = reelFrames.length * reelFrameInterval;
+    reelDurationSeconds.textContent = `${Math.ceil(reelTotalDuration / 1000)} секунд`;
+
+    if (screens[current]?.dataset.screen === 'time-lapse') {
+      renderMemoryReel(Math.min(reelIndex, reelFrames.length - 1));
+    }
+  }
+
+  function renderMemoryReel(index) {
+    const frame = reelFrames[index];
+    const stageIndex = getReelStageIndex(index);
+
+    reelIndex = index;
+    reelFinished = false;
+    reelStage.classList.remove('is-finished');
+    reelStage.classList.toggle('is-reel-reverse', index > 0 && index % 2 === 0);
+    const incomingReelImage = activeReelImage === reelImage ? reelImageNext : reelImage;
+    const outgoingReelImage = activeReelImage;
+
+    incomingReelImage.src = frame.src;
+    incomingReelImage.alt = `Фотография из ${reelStages[stageIndex]} класса`;
+    incomingReelImage.className = 'reel-image-next';
+    outgoingReelImage.className = 'reel-image-current';
+    void reelStage.offsetWidth;
+    reelStage.classList.add('is-changing');
+    outgoingReelImage.classList.add('reel-image-out');
+    incomingReelImage.classList.add('reel-image-in');
+    window.setTimeout(() => {
+      outgoingReelImage.className = 'reel-image-next';
+      incomingReelImage.className = 'reel-image-current';
+      activeReelImage = incomingReelImage;
+      reelStage.classList.remove('is-changing');
+    }, 360);
+
+    const progress = reelFrames.length > 1 ? index / (reelFrames.length - 1) : 1;
+    reelTrackFill.style.width = `${progress * 100}%`;
+    reelEnding.classList.remove('is-visible');
+
+    reelControls.forEach((button, buttonIndex) => {
+      button.classList.toggle('is-active', buttonIndex === stageIndex);
+    });
+  }
+
+  function stopMemoryReel() {
+    if (reelTimer) {
+      window.clearInterval(reelTimer);
+      reelTimer = null;
+    }
+    reelProgressActive = false;
+    if (reelProgressFrame) {
+      window.cancelAnimationFrame(reelProgressFrame);
+      reelProgressFrame = null;
+    }
+  }
+
+  function updateReelProgress(now) {
+    if (!reelProgressActive) return;
+
+    const elapsed = Math.min(now - reelStartedAt, reelTotalDuration);
+    const progress = reelTotalDuration ? elapsed / reelTotalDuration : 1;
+
+    reelTrackFill.style.width = `${progress * 100}%`;
+    reelProgressFrame = window.requestAnimationFrame(updateReelProgress);
+  }
+
+  function startMemoryReel() {
+    stopMemoryReel();
+    reelFinished = false;
+    reelEnding.classList.remove('is-visible');
+    renderMemoryReel(0);
+    reelStartedAt = performance.now();
+    reelProgressActive = true;
+    reelProgressFrame = window.requestAnimationFrame(updateReelProgress);
+
+    reelTimer = window.setInterval(() => {
+      if (reelIndex >= reelFrames.length - 1) {
+        stopMemoryReel();
+        reelFinished = true;
+        reelTrackFill.style.width = '100%';
+        reelStage.classList.add('is-finished');
+        window.setTimeout(() => {
+          if (reelFinished) reelEnding.classList.add('is-visible');
+        }, 1000);
+        return;
+      }
+
+      renderMemoryReel(reelIndex + 1);
+    }, reelFrameInterval);
+  }
+
+  reelControls.forEach(button => {
+    button.addEventListener('click', () => {
+      stopMemoryReel();
+      reelFinished = false;
+      const stageIndex = Number(button.dataset.reelIndex);
+      renderMemoryReel(Math.min(
+        reelFrames.length - 1,
+        Math.floor((stageIndex / reelStages.length) * reelFrames.length)
+      ));
+    });
+  });
+
+  renderMemoryReel(0);
+  loadReelFrames();
+
+  // -------------------------
   // PHOTO CHRONICLE
   // -------------------------
 
@@ -356,12 +575,14 @@
 
   let activeYear = '6';
   let photoIndex = 0;
+  let photoDirection = 1;
 
   const image = document.getElementById('chronicleImage');
   const meta = document.getElementById('chronicleMeta');
   const cap = document.getElementById('chronicleCaption');
   const hint = document.getElementById('chronicleHint');
   const dots = document.getElementById('photoDots');
+  const chronicleCard = document.getElementById('chronicleCard');
 
   function renderPhotos() {
     const count = yearCounts[activeYear];
@@ -375,6 +596,12 @@
     const file =
       `images/chronicle${String(global).padStart(2, '0')}.jpg`;
 
+    chronicleCard.classList.remove('is-turning', 'turn-forward', 'turn-back');
+    void chronicleCard.offsetWidth;
+    chronicleCard.classList.add(
+      'is-turning',
+      photoDirection > 0 ? 'turn-forward' : 'turn-back'
+    );
     image.src = file;
 
     meta.textContent =
@@ -424,6 +651,7 @@
           button.dataset.photoYear;
 
         photoIndex = 0;
+        photoDirection = 1;
 
         renderPhotos();
       });
@@ -432,6 +660,7 @@
   document
     .querySelector('.photo-prev')
     .addEventListener('click', () => {
+      photoDirection = -1;
       photoIndex =
         (photoIndex - 1 + yearCounts[activeYear]) %
         yearCounts[activeYear];
@@ -442,6 +671,7 @@
   document
     .querySelector('.photo-next')
     .addEventListener('click', () => {
+      photoDirection = 1;
       photoIndex =
         (photoIndex + 1) %
         yearCounts[activeYear];
@@ -463,9 +693,6 @@
 
   const lightboxCaption =
     document.getElementById('lightboxCaption');
-
-  const chronicleCard =
-    document.getElementById('chronicleCard');
 
   const lightboxClose =
     document.getElementById('lightboxClose');
@@ -516,6 +743,10 @@
 
         toast.textContent =
           card.dataset.memory;
+        toast.classList.remove('is-visible');
+        window.requestAnimationFrame(() => {
+          toast.classList.add('is-visible');
+        });
       });
     });
 
@@ -589,7 +820,7 @@
 
         thanksFinal.textContent =
           thanks.length
-            ? `${thanks.join(' · ')} — всё это я хотел сказать Вам.`
+            ? `${thanks.join(' · ')} — за всё это я хотел сказать Вам спасибо.`
             : 'Нажмите на слова — пусть они постепенно соберутся в одну мысль.';
       });
     });
@@ -604,11 +835,15 @@
   const reveal =
     document.getElementById('greetingReveal');
 
+  const birthdayScreen =
+    document.querySelector('[data-screen="13"]');
+
   revealBtn.addEventListener('click', () => {
     const open =
       !reveal.classList.contains('open');
 
     reveal.classList.toggle('open', open);
+    birthdayScreen.classList.toggle('is-revealed', open);
 
     reveal.setAttribute(
       'aria-hidden',
@@ -676,17 +911,17 @@
   // Добавляй новые письма только сюда:
   // { name: 'Имя', message: 'Текст поздравления' }
   const classmateLetters = [
-    { name: 'Амир', message: 'Здравствуйте, Кристина Александровна , я бы хотел открытся перед вами как вы открылись перед нами: Сначала я был обычный пацан я учился до 3 класса со своей сестрой потом со своей семьей я переселился, и в 4 классе начал ходить в другую школу, тогда у меня началась  наблюдатся социофобия, потом и 5 класс опять поменялась школа. Я был один но потихоньку начал заводить себе друзей одним из них стал Юсуф который стал для меня опорой если бы не он и не Гоша я был бы один. В 5 классе самым лучшим учителем для меня был Александр Игоревич так как он старался сплотить меня с классом так как до этого я никогда не мог этого. В 6 классе пришли вы и с 6 по 9 класс вы смогли впервые помочь мне почувствовать себя частью класса и тем кого видят и не игнорируют за что я вам очень благодарен хоть я и до сих не смог окончательно избавиться от боязни общества но я смог ослабить эту боязнь с помощью вас. Я понимаю что я не ваш любимчик но мне этого и не надо. Вы сделали максимум и даже больше чтобы помочь мне. Вы были мне как вторая мама и я всегда так думал. За всю жизнь я считаю вас лучшей классной руководительницей которую только видел. Не судите строго я редко перед кем то открываюсь😅 я хотел просто поблагадорить и поздравить вас с вашим днем!! 🥳🥳🥳' },
-    { name: 'Сабрины', message: 'Здесь будет второе письмо.' },
-    { name: 'Ксюши', message: 'Здесь будет третье письмо.' },
+    { name: 'Амира', message: 'Здравствуйте, Кристина Александровна , я бы хотел открытся перед вами как вы открылись перед нами: Сначала я был обычный пацан я учился до 3 класса со своей сестрой потом со своей семьей я переселился, и в 4 классе начал ходить в другую школу, тогда у меня началась  наблюдатся социофобия, потом и 5 класс опять поменялась школа. Я был один но потихоньку начал заводить себе друзей одним из них стал Юсуф который стал для меня опорой если бы не он и не Гоша я был бы один. В 5 классе самым лучшим учителем для меня был Александр Игоревич так как он старался сплотить меня с классом так как до этого я никогда не мог этого. В 6 классе пришли вы и с 6 по 9 класс вы смогли впервые помочь мне почувствовать себя частью класса и тем кого видят и не игнорируют за что я вам очень благодарен хоть я и до сих не смог окончательно избавиться от боязни общества но я смог ослабить эту боязнь с помощью вас. Я понимаю что я не ваш любимчик но мне этого и не надо. Вы сделали максимум и даже больше чтобы помочь мне. Вы были мне как вторая мама и я всегда так думал. За всю жизнь я считаю вас лучшей классной руководительницей которую только видел. Не судите строго я редко перед кем то открываюсь😅 я хотел просто поблагадорить и поздравить вас с вашим днем!! 🥳🥳🥳' },
+    { name: 'Сабрины', message: 'Кристина Александровна, поздравляю Вас с днём рождения!!! Желаю Вам больше прекрасных моментов в жизни, которых хочется на вечно запоминать, чтобы Ваша жизнь была такое же прекрасной, как Вы сами!! Люблю Вас сильно! Также хотела сказать, что Ваше присутствие в моей жизни является одним из прекрасных её событий. Всегда останетесь одним из сильных примеров для подорожания. Знаю, что в любом момент за помощью могу к Вам обратиться, также хочу чтобы Вы помнили, что я тоже всегда готова Вам помочь всем чем смогу. Ещё раз с днём рождения! Будьте всегда счастлива! Ценю и люблю!' },
+    { name: 'Ксюши', message: 'Моя любимая Кристина Александровна, поздравляю Вас с днём рождения!!! Я от всей души желаю Вам всего самого наилучшего, и пусть у Вас в жизни будет как можно больше поводов для улыбок. Я очень сильно Вас люблю и благодарна Вам за всё, что Вы для нас сделали❤️' },
     { name: 'Эдвина', message: 'Здесь будет четвёртое письмо.' },
     { name: 'Санжара', message: 'Здесь будет пятое письмо.' },
-    { name: 'Сергея С.', message: 'Здесь будет шестое письмо.' },
-    { name: 'Гоши', message: 'Здесь будет седьмое письмо.' },
-    { name: 'Леши', message: 'Здесь будет восьмое письмо.' },
-    { name: 'Дани Б.', message: 'Здесь будет девятое письмо.' },
-    { name: 'Сергея Д.', message: 'Здесь будет десятое письмо.' },
-    { name: 'Игоря', message: 'Здесь будет одиннадцатое письмо.' },
+    { name: 'Сергея С.', message: 'Кристина Александровна, с днем рождения вас! Желаю счастья, здоровья, особенно крепких нервов на работе. Оставайтесь такой же доброй и молодой' },
+    { name: 'Гоши', message: 'Дорогая Кристина Александровна, поздравляю вас с днём рождения, желаю всего наилучшего. Также мне хотелось сказать спасибо за все эти годы проведённые с вами, вы были тем учителем с которым можно поговорить по душам, который всегда был готов защищать меня от быдланок, даже когда быдланкой был я. Спасибо вам за ваши наставления как по жизни так и в сфере информатики. Спасибо вам за всё! С любовью,' },
+    { name: 'Леши', message: 'С днем рождения, Кристина Александровна! Мне правда хочется вам очень много сказать и жаль, что все свои эмоции я не смогу передать в этом сообщении, но я попытаюсь донести то, что внутри меня. Я искренне благодарен вам за все проведенное с вами время. Я благодарен за то что вы выслушивали меня, понимали, поддерживали, помогали и давали внимание. Никогда не было такого, чтобы я пропустил хотя бы один ваш совет мимо ушей. Все что вы мне говорили я использовал в своей жизни и вы очень сильно помогли мне многими словами, которые я никогда в своей жизни не забуду и вечно буду ценить. Вы действительно один из самых ключевых людей в моей жизни. То, как вы повлияли на мою жизнь, повлияло очень мало людей и я правда безмерно благодарен вам за это. Вас правда всегда было очень интересно слушать и никогда не было такого, чтобы я хотел уйти от разговора с вами. И вы действительно стали для меня тем взрослым, на мнение которого было не все равно) тем, кто научил меня многому и тем, кого я буду помнить всю оставшиеся жизнь, вспоминать с любовью и рассказывать всем о том, какая прекрасная, замечательная и самая сильная учительница была у меня;) Я ведь тоже навсегда запомню те моменты, когда вы завязывали мне шарф и тоже буду вспоминать их с любовью и дальше. Я желаю вам всего замого прекрасного, счастья, любви, здоровья, хороших и добрых людей рядом с вами, тем кому можно было доверять, денег и той жизни, которую вы пожелаете, потому что вы дейсвительно заслуживайте все самое чудесное!!' },
+    { name: 'Дани Б.', message: 'Кристина Александровна, поздравляю Вас с днём рождения! От всей души желаю вам крепкого здоровья, и вашим близким. Спасибо Вам за доброту, заботу, терпение и поддержку, которые Вы дарили нам. Вы были не просто классным руководителем, а человеком, который оставил после себя очень тёплые и добрые воспоминания. Я с благодарностью вспоминаю школьные годы и всё, что вы для нас делали.Желаю вам оставаться такой же доброй, красивой, светлой и замечательной. С днём рождения!' },
+    { name: 'Сергея Д.', message: 'Кристина Алекснадровна,поздравляю вас с днем рождения.Желаю вам счястья,здоровья и конечно крепких нервов и терпения.Надеюсь вы продолжаете делать серые школьные дни яркими,теплыми и запоминающимися,нам сейчас сильно не хватает вашей поддержки и позитивного настроя на протяжении учебы!' },
+    { name: 'Игоря', message: 'Кристина Александровна, спасибо вам за все, что вы для нас сделали, за то что всегда были за нас, всегда поддерживали, выслушивали нас и прощала наши не совсем адекватные действия. Нам жаль, что из всех людей в Т классе мы скорее всего больше всех портили вам настроение, но я хочу сказать, что каждое наше действие не являлось знаком неуважения к вам, мы просто хотели создать будущие смешные истории от которых всем бы было смешно. Спасибо вам за то, что писюны в тетрадках вы не воспринимали как что-то плохое, а сами с этого смеялись, спасибо за то что выслушивали наши рассказы про учителей. Я жалею, что мы могли перебарщивать, но мы никогда не делали это иза какого зла. Я очень рад, что именно вы оказались моим классным руководителем, а не кто-то другой. Спасибо вам за все, Кристина Александровна!' },
     { name: 'Артема', message: 'Здесь будет двенадцатое письмо.' },
     { name: 'Макса', message: 'Дорогая Кристина Александровна, поздравляю  вас с днём рождения! Спасибо вам огромное за то, что вы стали не просто учителем, а наставником для всех нас, к которому всегда можно прийти за советом. Желаю вам стальных нервов, хорошего настроения и чтобы абсолютно все классы в вашей карьере были только самыми лучшими, дружными и замечательными!' }
   ];
@@ -701,7 +936,28 @@
   const LETTERS_PER_PAGE = 6;
   let lettersPage = 0;
   let openedLetterIndex = null;
-    let fullscreenLetter = null;
+  let fullscreenLetter = null;
+  const readLettersKey = 'birthday-letter-read-letters';
+  let readLetters = new Set();
+
+  try {
+    readLetters = new Set(
+      JSON.parse(localStorage.getItem(readLettersKey) || '[]')
+    );
+  } catch (error) {
+    readLetters = new Set();
+  }
+
+  function markLetterRead(index) {
+    readLetters.add(index);
+    try {
+      localStorage.setItem(
+        readLettersKey,
+        JSON.stringify([...readLetters])
+      );
+    } catch (error) {
+    }
+  }
 
   function openLetterFullscreen(letter, globalIndex) {
     closeLetterFullscreen();
@@ -898,8 +1154,8 @@
       margin-top: 42px;
       padding-top: 18px;
       border-top: 1px solid rgba(255,255,255,.08);
-      font-family: "Playfair Display", serif;
-      font-size: 19px;
+      font-family: "Marck Script", cursive;
+      font-size: 27px;
       font-style: italic;
       opacity: .78;
     }
@@ -980,7 +1236,12 @@
       const envelope = document.createElement('button');
       envelope.type = 'button';
       envelope.className = 'envelope';
+      envelope.style.setProperty('--envelope-delay', `${localIndex * 70}ms`);
       envelope.setAttribute('aria-label', `Открыть письмо от ${letter.name}`);
+      if (readLetters.has(globalIndex)) {
+        envelope.classList.add('is-read');
+        envelope.setAttribute('aria-label', `Открыть письмо от ${letter.name}, прочитано`);
+      }
 
       const flap = document.createElement('span');
       flap.className = 'envelope-flap';
@@ -996,6 +1257,11 @@
       const label = document.createElement('span');
       label.className = 'envelope-label';
       label.textContent = `Для КА, с любовью от ${letter.name}`;
+
+      const readMark = document.createElement('span');
+      readMark.className = 'envelope-read-mark';
+      readMark.textContent = 'прочитано';
+      readMark.setAttribute('aria-hidden', 'true');
 
       const paper = document.createElement('span');
       paper.className = 'envelope-paper';
@@ -1013,7 +1279,7 @@
       paperSign.textContent = `— ${letter.name}`;
 
       paper.append(paperHead, paperMessage, paperSign);
-      envelope.append(flap, stamp, seal, label, paper);
+      envelope.append(flap, stamp, seal, label, readMark, paper);
 
         envelope.addEventListener('click', () => {
         if (openedLetterIndex === globalIndex) {
@@ -1029,6 +1295,8 @@
         });
 
         openedLetterIndex = globalIndex;
+        markLetterRead(globalIndex);
+        envelope.classList.add('is-read');
         envelope.classList.add('is-opening');
 
         window.setTimeout(() => {

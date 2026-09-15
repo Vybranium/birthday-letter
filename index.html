@@ -8,10 +8,22 @@
 <title>Письмо для Кристины Александровны — 17.09.2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Marck+Script&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="loading-screen" id="loadingScreen" role="dialog" aria-modal="true" aria-labelledby="coverTitle">
+  <div class="loading-glow" aria-hidden="true"></div>
+  <div class="cover-envelope" aria-hidden="true">
+    <div class="cover-flap"></div>
+    <span class="cover-inside-date">17 · 09 · 2026</span>
+    <div class="loading-seal"><span>КА</span></div>
+  </div>
+  <p class="loading-title" id="coverTitle">Для<br><em>Кристины Александровны</em></p>
+  <div class="loading-line" aria-hidden="true"><span></span></div>
+  <p class="loading-note">одно личное письмо</p>
+  <button class="cover-open" id="coverOpen" type="button">Открыть письмо <span>→</span></button>
+</div>
 <div class="noise" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div>
 <div class="ambient ambient--one" aria-hidden="true"></div><div class="ambient ambient--two" aria-hidden="true"></div>
 <header class="chrome">
@@ -46,6 +58,18 @@
   </div>
   <div class="timeline-detail" id="timelineDetail"><div class="timeline-number">06</div><div><h3>Начало истории</h3><p>Начало</p></div></div>
   <button class="text-btn js-next">Открыть фотографии <span>→</span></button>
+</div></section>
+
+<section class="screen" data-screen="time-lapse" data-label="4 года за 40 секунд"><div class="screen-inner memory-reel-screen">
+  <div class="reel-duration" id="reelDuration"><strong>4 года за <span id="reelDurationSeconds">85 секунд</span></strong></div>
+  <div class="reel-stage" id="memoryReelStage">
+    <div class="reel-ambient-clock" aria-hidden="true"><span class="ambient-clock-hand ambient-clock-hand--hour"></span><span class="ambient-clock-hand ambient-clock-hand--minute"></span><span class="ambient-clock-hand ambient-clock-hand--second"></span><span class="ambient-clock-pin"></span></div>
+    <div class="reel-track" aria-hidden="true"><span id="reelTrackFill"></span></div>
+    <figure class="reel-photo"><div class="reel-image-frame"><img class="reel-image-current" id="reelImage" src="images/chronicle01.jpg" alt="Фотография из 6 класса"><img class="reel-image-next" id="reelImageNext" src="images/chronicle01.jpg" alt=""></div></figure>
+  </div>
+  <div class="reel-controls" aria-label="Переход по временной шкале"><button class="reel-control is-active" data-reel-index="0" type="button" aria-label="Начало временной шкалы"></button><button class="reel-control" data-reel-index="1" type="button" aria-label="Четверть временной шкалы"></button><button class="reel-control" data-reel-index="2" type="button" aria-label="Половина временной шкалы"></button><button class="reel-control" data-reel-index="3" type="button" aria-label="Конец временной шкалы"></button></div>
+  <p class="reel-ending" id="reelEnding">А потом школа закончилась. Но воспоминания - нет.</p>
+  <button class="text-btn js-next">Открыть фотохронику <span>→</span></button>
 </div></section>
 
 <section class="screen" data-screen="5" data-label="Фотохроника"><div class="screen-inner chronology-screen">
@@ -99,7 +123,7 @@
   <article class="letter-paper long-letter"><div class="letter-rule"></div><h2>Есть вещи,<br>которые лучше<br><em>сказать лично.</em></h2>
     <div class="editable-letter"><p>Дорогая, Кристина Александровна,
 я довольно долго думал, что именно хочу Вам сказать. Обычного «с днём рождения» мне почему-то оказалось мало. Хотелось сказать что-то действительно личное, то, что я, возможно, не смог бы нормально сказать просто при встрече. </p><p>Когда я закончил 9 класс, мне казалось, что я просто иду дальше. Новый колледж, новые люди, новые обстоятельства, совершенно другая жизнь. Я не думал, что спустя какое-то время начну по-другому смотреть на то, что осталось позади.И только потом я начал замечать одну вещь. Мне запомнились не какие-то большие события. Не отдельные уроки и не школьные будни сами по себе. Мне запомнились люди и то, как я чувствовал себя рядом с ними. И среди этих людей Вы занимаете для меня очень особенное место.</p><p>Мне особенно запомнилось то, что Вам действительно было интересно то, чем я занимаюсь. Я мог рассказывать про компьютеры, Linux, какие-то свои проекты, идеи, то, что изучаю, а иногда, наверное, и вовсе слишком долго говорить об этом. Но Вы слушали. И, возможно, со стороны это кажется совсем маленькой вещью. Для меня нет. Потому что когда человеку действительно интересны твои увлечения, ты начинаешь чувствовать, что и сам становишься немного важнее. Что то, чем ты занимаешься, кому-то ещё не безразлично. Сейчас я понимаю, насколько ценным для меня было это ощущение.</p><p>После 9 класса многое изменилось. У меня началась совершенно другая жизнь, появились новые люди, как вы помните не очень умные, новые цели, новые вещи, которым я учусь. И, наверное, именно поэтому я теперь могу посмотреть назад немного со стороны. Тогда я просто считал многие вещи обычными. Ваше внимание, наши разговоры, возможность что-то рассказать, обратиться к Вам, знать, что меня выслушают. Сейчас я понимаю, что это вовсе не было чем-то само собой разумеющимся.</p><p>Поэтому я хочу сказать Вам спасибо.</p><p>Не просто спасибо за то, что Вы были моей классной руководительницей. А спасибо именно Вам как человеку который стал очень важной частью моей жизни, спасибо за внимание, за терпение, за разговоры, за интерес к тому, чем я увлекался, и за то, что рядом с Вами я мог оставаться собой. Наверное, самое главное, что я понял уже после окончания школы: иногда человек может значить для тебя гораздо больше, чем ты способен понять в тот момент.
-И я очень рад, что в моей жизни был такой человек.</p><p>С днём рождения, Кристина Александровна. Я искренне желаю Вам побольше спокойных и счастливых дней, людей, которые будут ценить Вас так же искренне, как ценю Вас я, и чтобы всё хорошее, что Вы когда-то отдавали другим, обязательно возвращалось к Вам.</p></div><div class="letter-sign">Ваш будущий крутой айтишник, Юсуф</div>
+  И я очень рад, что в моей жизни был такой человек.</p><p>С днём рождения, Кристина Александровна. Я искренне желаю Вам побольше спокойных и счастливых дней, людей, которые будут ценить Вас так же искренне, как ценю Вас я, и чтобы всё хорошее, что Вы когда-то отдавали другим, обязательно возвращалось к Вам.</p></div><div class="letter-sign">Ваш будущий крутой айтишник, Юсуф</div>
   </article><button class="text-btn js-next letter-next">Ещё несколько слов <span>→</span></button>
 </div></section>
 
