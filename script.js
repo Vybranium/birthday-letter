@@ -576,6 +576,7 @@
   let activeYear = '6';
   let photoIndex = 0;
   let photoDirection = 1;
+  const chroniclePhotoCache = new Map();
 
   const image = document.getElementById('chronicleImage');
   const meta = document.getElementById('chronicleMeta');
@@ -583,6 +584,28 @@
   const hint = document.getElementById('chronicleHint');
   const dots = document.getElementById('photoDots');
   const chronicleCard = document.getElementById('chronicleCard');
+
+  function preloadChroniclePhotos() {
+    const totalPhotos = Object.values(yearCounts).reduce(
+      (total, count) => total + count,
+      0
+    );
+
+    for (let photoNumber = 1; photoNumber <= totalPhotos; photoNumber += 1) {
+      const file =
+        `images/chronicle${String(photoNumber).padStart(2, '0')}.jpg`;
+
+      const photo = new Image();
+      photo.decoding = 'async';
+      photo.fetchPriority = photoNumber <= 5 ? 'high' : 'low';
+      photo.src = file;
+      chroniclePhotoCache.set(file, photo);
+
+      if (photo.decode) {
+        photo.decode().catch(() => {});
+      }
+    }
+  }
 
   function renderPhotos() {
     const count = yearCounts[activeYear];
@@ -602,7 +625,8 @@
       'is-turning',
       photoDirection > 0 ? 'turn-forward' : 'turn-back'
     );
-    image.src = file;
+    const cachedPhoto = chroniclePhotoCache.get(file);
+    image.src = cachedPhoto?.currentSrc || file;
 
     meta.textContent =
       `${activeYear} класс · ${number} / ${count}`;
@@ -679,6 +703,7 @@
       renderPhotos();
     });
 
+  preloadChroniclePhotos();
   renderPhotos();
 
   // -------------------------
