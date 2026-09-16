@@ -985,6 +985,8 @@
   ];
 
   const lettersArchive = document.getElementById('lettersArchive');
+  const archiveExitFinal = document.getElementById('archiveExitFinal');
+  const returnToSite = document.getElementById('returnToSite');
   const openLettersArchive = document.getElementById('openLettersArchive');
   const closeLettersArchive = document.getElementById('closeLettersArchive');
   const envelopeGrid = document.getElementById('envelopeGrid');
@@ -996,6 +998,7 @@
   let lettersPage = 0;
   let openedLetterIndex = null;
   let fullscreenLetter = null;
+  let archiveIsClosing = false;
   const readLettersKey = 'birthday-letter-read-letters';
   let readLetters = new Set();
 
@@ -1086,6 +1089,7 @@
   function closeLetterFullscreen() {
     if (!fullscreenLetter) return;
 
+    const wasFeatured = fullscreenLetter.classList.contains('letter-fullscreen--featured');
     fullscreenLetter.classList.remove('is-visible');
 
     const currentOverlay = fullscreenLetter;
@@ -1093,9 +1097,41 @@
 
     setTimeout(() => {
       currentOverlay.remove();
+
+      if (
+        wasFeatured &&
+        lettersArchive.classList.contains('is-open') &&
+        !archiveIsClosing
+      ) {
+        showArchiveFinale();
+      }
     }, 320);
 
     document.body.classList.remove('letter-fullscreen-active');
+  }
+
+  function showArchiveFinale() {
+    if (document.getElementById('archiveFinale')) return;
+
+    const finale = document.createElement('div');
+    finale.className = 'archive-finale';
+    finale.id = 'archiveFinale';
+    finale.innerHTML = `
+      <div class="archive-finale-light" aria-hidden="true"></div>
+      <div class="archive-finale-rule" aria-hidden="true"></div>
+      <p class="archive-finale-kicker">последняя страница</p>
+      <p class="archive-finale-text">А на этом письма заканчиваются. Но всё хорошее, что Вы подарили нам, остаётся с нами и продолжает жить в наших воспоминаниях, в разговорах, смешных историях и тёплых моментах, к которым хочется возвращаться снова и снова.</p>
+      <button class="archive-finale-close" type="button">Закрыть архив</button>
+    `;
+
+    lettersArchive.appendChild(finale);
+    requestAnimationFrame(() => {
+      finale.classList.add('is-visible');
+    });
+
+    finale
+      .querySelector('.archive-finale-close')
+      .addEventListener('click', closeLetters);
   }
     const fullscreenLetterStyle = document.createElement('style');
 
@@ -1401,6 +1437,11 @@
   }
 
   function openLetters() {
+    archiveIsClosing = false;
+    archiveExitFinal?.classList.remove('is-visible');
+    archiveExitFinal?.classList.remove('is-preparing');
+    archiveExitFinal?.setAttribute('aria-hidden', 'true');
+    document.getElementById('archiveFinale')?.remove();
     lettersArchive.classList.add('is-open');
     lettersArchive.setAttribute('aria-hidden', 'false');
     lettersPage = 0;
@@ -1408,9 +1449,31 @@
   }
 
   function closeLetters() {
-    lettersArchive.classList.remove('is-open');
-    lettersArchive.setAttribute('aria-hidden', 'true');
+    if (archiveIsClosing || !lettersArchive.classList.contains('is-open')) return;
+
+    archiveIsClosing = true;
+    archiveExitFinal?.classList.add('is-preparing');
+    archiveExitFinal?.setAttribute('aria-hidden', 'false');
+    lettersArchive.classList.add('is-closing');
+
+    window.setTimeout(() => {
+      lettersArchive.classList.remove('is-open', 'is-closing');
+      lettersArchive.setAttribute('aria-hidden', 'true');
+      archiveExitFinal?.classList.remove('is-preparing');
+      archiveExitFinal?.classList.add('is-visible');
+      archiveExitFinal?.setAttribute('aria-hidden', 'false');
+      archiveIsClosing = false;
+    }, reduced ? 20 : 1550);
   }
+
+  returnToSite?.addEventListener('click', () => {
+    archiveExitFinal.classList.remove('is-visible');
+    archiveExitFinal.classList.remove('is-preparing');
+    archiveExitFinal.setAttribute('aria-hidden', 'true');
+    lettersArchive.classList.remove('is-open', 'is-closing');
+    lettersArchive.setAttribute('aria-hidden', 'true');
+    go(14, -1);
+  });
 
   openLettersArchive.addEventListener('click', openLetters);
   closeLettersArchive.addEventListener('click', closeLetters);
@@ -1449,121 +1512,6 @@
   });
 
   renderLetters();
-    // -------------------------
-  // CLASSMATE LETTERS — FEATURED BUTTON
-  // -------------------------
-
-
-  lettersFeaturedStyle.textContent = `
-    .letters-archive-trigger--featured {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 7px;
-      width: min(100%, 430px);
-      margin-top: 26px;
-      padding: 18px 20px 17px;
-      text-align: left;
-      overflow: hidden;
-      border: 1px solid rgba(184, 138, 77, 0.55);
-      background:
-        linear-gradient(
-          135deg,
-          rgba(120, 24, 38, 0.16),
-          rgba(12, 12, 12, 0.82)
-        );
-      box-shadow:
-        0 10px 35px rgba(0,0,0,.18),
-        inset 0 1px 0 rgba(255,255,255,.035);
-      transition:
-        transform .28s ease,
-        border-color .28s ease,
-        box-shadow .28s ease;
-    }
-
-    .letters-archive-trigger--featured::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        110deg,
-        transparent 0%,
-        rgba(255,255,255,.08) 48%,
-        transparent 58%
-      );
-      transform: translateX(-120%);
-      animation: lettersButtonSweep 4.5s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    .letters-archive-trigger--featured:hover {
-      transform: translateY(-3px);
-      border-color: rgba(184, 138, 77, 0.9);
-      box-shadow:
-        0 16px 45px rgba(0,0,0,.28),
-        0 0 35px rgba(120,24,38,.12);
-    }
-
-    .letters-archive-trigger--featured:active {
-      transform: translateY(0);
-    }
-
-    .letters-trigger-top {
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      opacity: .62;
-    }
-
-    .letters-trigger-main {
-      position: relative;
-      z-index: 1;
-      font-family: "Playfair Display", serif;
-      font-size: clamp(22px, 2vw, 30px);
-      line-height: 1.05;
-      color: #eee7da;
-    }
-
-    .letters-trigger-bottom {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: "Manrope", sans-serif;
-      font-size: 12px;
-      opacity: .72;
-    }
-
-    .letters-trigger-bottom span {
-      font-size: 16px;
-      transition: transform .25s ease;
-    }
-
-    .letters-archive-trigger--featured:hover .letters-trigger-bottom span {
-      transform: translateX(4px);
-    }
-
-    @keyframes lettersButtonSweep {
-      0%, 55%, 100% {
-        transform: translateX(-120%);
-      }
-
-      70% {
-        transform: translateX(120%);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .letters-archive-trigger--featured {
-        width: 100%;
-      }
-    }
-  `;
-
-  document.head.appendChild(lettersFeaturedStyle);
   // -------------------------
   // INIT
   // -------------------------

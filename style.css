@@ -916,6 +916,64 @@ h2 em,
 @keyframes arrivalHalo{0%{opacity:0;transform:scale(.45)}25%{opacity:.25}48%{opacity:1}100%{opacity:0;transform:scale(3)}}
 @keyframes sealMajesty{0%{transform:translate(-50%,-50%) scale(.5) rotate(-24deg);box-shadow:0 0 0 0 rgba(208,174,120,0)}35%{transform:translate(-50%,-50%) scale(.82) rotate(-10deg);box-shadow:0 0 0 6px rgba(208,174,120,.05),0 0 24px rgba(208,174,120,.18)}62%{transform:translate(-50%,-50%) scale(1.2) rotate(10deg);box-shadow:0 0 0 16px rgba(208,174,120,.13),0 0 54px rgba(208,174,120,.55)}82%{transform:translate(-50%,-50%) scale(.96) rotate(-3deg)}100%{transform:translate(-50%,-50%) scale(1) rotate(0);box-shadow:0 0 0 7px rgba(208,174,120,.07),0 0 30px rgba(208,174,120,.24)}}
 
+.archive-finale{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(28px,7vw,90px);overflow:hidden;background:rgba(8,8,7,.96);opacity:0;visibility:hidden;transform:scale(1.035);transition:opacity 1.4s ease,visibility 1.4s ease,transform 2.2s var(--ease)}
+.archive-finale.is-visible{opacity:1;visibility:visible;transform:scale(1)}
+.archive-finale-light{position:absolute;left:50%;top:43%;width:min(80vw,850px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(208,174,120,.16),transparent 67%);filter:blur(7px);opacity:0;transform:translate(-50%,-50%) scale(.45);transition:opacity 2.4s ease .6s,transform 3.4s var(--ease) .6s}
+.archive-finale.is-visible .archive-finale-light{opacity:1;transform:translate(-50%,-50%) scale(1.18)}
+.archive-finale-rule{position:relative;width:0;height:1px;margin-bottom:26px;background:var(--gold-bright);box-shadow:0 0 22px rgba(208,174,120,.6);transition:width 1.6s var(--ease) 1.7s}
+.archive-finale.is-visible .archive-finale-rule{width:74px}
+.archive-finale-kicker{position:relative;margin:0 0 18px;color:var(--gold-bright);font:9px 'DM Mono',monospace;letter-spacing:.24em;text-transform:uppercase;opacity:0;transform:translateY(12px);transition:opacity 1s ease 1.9s,transform 1.2s var(--ease) 1.9s}
+.archive-finale.is-visible .archive-finale-kicker{opacity:.8;transform:translateY(0)}
+.archive-finale-text{position:relative;width:min(760px,100%);margin:0;color:var(--cream);text-align:center;font:clamp(25px,3.4vw,47px)/1.16 'Playfair Display',serif;letter-spacing:-.02em;opacity:0;filter:blur(12px);transform:translateY(28px) scale(.96);transition:opacity 1.8s ease 2.2s,filter 1.8s ease 2.2s,transform 2s var(--ease) 2.2s}
+.archive-finale.is-visible .archive-finale-text{opacity:1;filter:blur(0);transform:translateY(0) scale(1);animation:archiveFinaleTextReveal 2.4s var(--ease) 1.8s both}
+.archive-finale-close{position:relative;margin-top:42px;padding:12px 18px;border:1px solid rgba(208,174,120,.42);background:transparent;color:rgba(245,240,232,.72);font:9px 'DM Mono',monospace;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity 1s ease 4.5s,transform 1s var(--ease) 4.5s,border-color .3s ease,color .3s ease}
+.archive-finale.is-visible .archive-finale-close{opacity:1;transform:translateY(0)}
+.archive-finale-close:hover{border-color:var(--gold-bright);color:var(--cream)}
+
+/* Финальный выход из архива: интерфейс растворяется, затем остаётся последняя страница. */
+.letters-archive.is-closing{opacity:1;background:rgba(3,3,3,.99);transform:none;filter:none;transition:background .32s ease;pointer-events:none}
+.letters-archive.is-closing .letters-archive-inner{opacity:0;transform:scale(.86) translateY(-2vh);filter:blur(14px);transition:opacity 1.15s ease .28s,transform 1.55s var(--ease) .28s,filter 1.15s ease .28s}
+.letters-archive.is-closing::after{content:"";position:absolute;z-index:100;left:50%;top:50%;width:14px;height:14px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 0 0 rgba(208,174,120,.7),0 0 42px 14px rgba(208,174,120,.7);transform:translate(-50%,-50%);animation:archiveClosingPulse 1.35s ease both}
+.archive-exit-final{position:fixed;inset:0;z-index:120;display:grid;place-items:center;overflow:hidden;padding:clamp(28px,7vw,90px);background:#080807;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1.2s ease,visibility 1.2s ease}
+.archive-exit-final.is-preparing{opacity:1;visibility:visible;pointer-events:none;transition:none}
+.archive-exit-final.is-preparing::before{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 38px 12px rgba(208,174,120,.65);transform:translate(-50%,-50%) scale(.25);animation:archiveExitFlash 1.45s var(--ease) both}
+.archive-exit-final.is-visible{opacity:1;visibility:visible;pointer-events:auto}
+.archive-exit-final__halo{position:absolute;width:min(78vw,900px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(208,174,120,.2),transparent 64%);filter:blur(9px);opacity:0;transform:scale(.32);transition:opacity 2.8s ease .35s,transform 3.2s var(--ease) .35s}
+.archive-exit-final.is-visible .archive-exit-final__halo{opacity:1;transform:scale(1.12)}
+.archive-exit-final__stars{position:absolute;inset:0;opacity:0;background-image:radial-gradient(circle,rgba(245,240,232,.8) 0 1px,transparent 1.5px),radial-gradient(circle,rgba(208,174,120,.75) 0 1px,transparent 1.5px);background-size:170px 190px,260px 220px;background-position:20px 30px,100px 80px;transition:opacity 2s ease .5s;animation:finalStars 18s linear infinite}
+.archive-exit-final.is-visible .archive-exit-final__stars{opacity:.35}
+.archive-exit-final__content{position:relative;width:min(760px,100%);text-align:center;transform:translateY(28px);opacity:0;transition:opacity 1.4s ease .55s,transform 1.6s var(--ease) .55s}
+.archive-exit-final.is-visible .archive-exit-final__content{opacity:1;transform:translateY(0)}
+.archive-exit-final__line{margin:30px 0 18px;color:var(--gold-bright);font:10px 'DM Mono',monospace;letter-spacing:.22em;text-transform:uppercase}
+.archive-exit-final h2{margin:0;color:var(--cream);font:500 clamp(44px,8vw,92px)/.94 'Playfair Display',serif;letter-spacing:-.04em}
+.archive-exit-final h2 em{color:var(--cream);text-shadow:0 0 42px rgba(208,174,120,.22)}
+.archive-exit-final__copy{width:min(520px,100%);margin:34px auto 0;color:rgba(245,240,232,.62);font-size:13px;line-height:1.8}
+.archive-exit-final__signature{margin-top:34px;color:rgba(245,240,232,.6);font:18px/1.35 'Marck Script',cursive}
+.archive-exit-final__signature strong{display:block;color:var(--gold-bright);font-size:34px;font-weight:400}
+.archive-exit-final__return{margin-top:36px;padding:12px 18px;border:1px solid rgba(208,174,120,.4);background:transparent;color:rgba(245,240,232,.7);font:9px 'DM Mono',monospace;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;transition:color .3s ease,border-color .3s ease,transform .3s var(--ease)}
+.archive-exit-final__return:hover{border-color:var(--gold-bright);color:var(--cream);transform:translateY(-3px)}
+@keyframes archiveClosingPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.3);box-shadow:0 0 0 0 rgba(208,174,120,.7),0 0 18px 8px rgba(208,174,120,.65)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(72);box-shadow:0 0 0 16px rgba(208,174,120,.2),0 0 70px 22px rgba(208,174,120,.1)}}
+@keyframes archiveFinaleTextReveal{0%{opacity:0;filter:blur(18px);clip-path:inset(0 0 100% 0);transform:translateY(38px) scale(.94)}45%{opacity:.7;filter:blur(5px);clip-path:inset(0 0 32% 0)}100%{opacity:1;filter:blur(0);clip-path:inset(0);transform:translateY(0) scale(1)}}
+@keyframes archiveExitFlash{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(105)}}
+@keyframes finalStars{to{background-position:190px 220px,360px 270px}}
+
+@media(max-width:620px){
+  .archive-finale{padding:24px 18px}
+  .archive-finale-text{font-size:clamp(24px,7vw,34px)}
+  .archive-finale-close{margin-top:30px}
+  .archive-exit-final{padding:24px 18px}
+  .archive-exit-final__copy{font-size:12px;line-height:1.7}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .archive-finale,.archive-finale-light,.archive-finale-rule,.archive-finale-kicker,.archive-finale-text,.archive-finale-close{transition:none;filter:none}
+  .archive-finale.is-visible .archive-finale-text{animation:none}
+  .letters-archive.is-closing,.letters-archive.is-closing .letters-archive-inner{transition:none;filter:none}
+  .letters-archive.is-closing::after,.archive-exit-final__stars{animation:none}
+  .archive-exit-final,.archive-exit-final__halo,.archive-exit-final__content{transition:none}
+  .archive-exit-final.is-preparing::before{animation:none}
+}
+
 @keyframes coverOpen{0%{opacity:1;transform:rotate(-2deg) scale(1)}45%{transform:rotate(1deg) scale(1.035)}100%{opacity:0;transform:rotate(5deg) scale(1.12) translateY(-16px)}}
 @keyframes sealBreak{50%{transform:translate(-50%,-50%) scale(1.2) rotate(-12deg);filter:brightness(1.5)}100%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(18deg)}}
 @keyframes albumCardIn{from{opacity:.45;transform:translateX(18px) rotateY(-8deg)}to{opacity:1;transform:translateX(0) rotateY(0)}}
