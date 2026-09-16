@@ -975,8 +975,13 @@
     { name: 'Дани Б.', message: 'Кристина Александровна, поздравляю Вас с днём рождения! От всей души желаю вам крепкого здоровья, и вашим близким. Спасибо Вам за доброту, заботу, терпение и поддержку, которые Вы дарили нам. Вы были не просто классным руководителем, а человеком, который оставил после себя очень тёплые и добрые воспоминания. Я с благодарностью вспоминаю школьные годы и всё, что вы для нас делали.Желаю вам оставаться такой же доброй, красивой, светлой и замечательной. С днём рождения!' },
     { name: 'Сергея Д.', message: 'Кристина Алекснадровна,поздравляю вас с днем рождения.Желаю вам счястья,здоровья и конечно крепких нервов и терпения.Надеюсь вы продолжаете делать серые школьные дни яркими,теплыми и запоминающимися,нам сейчас сильно не хватает вашей поддержки и позитивного настроя на протяжении учебы!' },
     { name: 'Игоря', message: 'Кристина Александровна, спасибо вам за все, что вы для нас сделали, за то что всегда были за нас, всегда поддерживали, выслушивали нас и прощала наши не совсем адекватные действия. Нам жаль, что из всех людей в Т классе мы скорее всего больше всех портили вам настроение, но я хочу сказать, что каждое наше действие не являлось знаком неуважения к вам, мы просто хотели создать будущие смешные истории от которых всем бы было смешно. Спасибо вам за то, что писюны в тетрадках вы не воспринимали как что-то плохое, а сами с этого смеялись, спасибо за то что выслушивали наши рассказы про учителей. Я жалею, что мы могли перебарщивать, но мы никогда не делали это иза какого зла. Я очень рад, что именно вы оказались моим классным руководителем, а не кто-то другой. Спасибо вам за все, Кристина Александровна!' },
+    { name: 'Макса', message: 'Дорогая Кристина Александровна, поздравляю  вас с днём рождения! Спасибо вам огромное за то, что вы стали не просто учителем, а наставником для всех нас, к которому всегда можно прийти за советом. Желаю вам стальных нервов, хорошего настроения и чтобы абсолютно все классы в вашей карьере были только самыми лучшими, дружными и замечательными!' },
     { name: 'Артема', message: 'Здравствуйте Кристина Александровна. Поздравляю вас с днем рождения! Желаю вам хорошего настроения, крепкого здоровья и всего наилучшего! Спасибо большое вам за то, что вы были отличным классным руководителем, были с нами на одной волне и за помощь на протяжении всего учебного года. Мы все вас часто вспоминаем и очень ценим. Спасибо за все!' },
-    { name: 'Макса', message: 'Дорогая Кристина Александровна, поздравляю  вас с днём рождения! Спасибо вам огромное за то, что вы стали не просто учителем, а наставником для всех нас, к которому всегда можно прийти за советом. Желаю вам стальных нервов, хорошего настроения и чтобы абсолютно все классы в вашей карьере были только самыми лучшими, дружными и замечательными!' }
+    {
+      name: 'Насима',
+      featured: true,
+      message: 'Здесь будет письмо'
+    }
   ];
 
   const lettersArchive = document.getElementById('lettersArchive');
@@ -987,6 +992,7 @@
   const lettersNext = document.getElementById('lettersNext');
   const lettersPageLabel = document.getElementById('lettersPageLabel');
   const LETTERS_PER_PAGE = 6;
+  const MAIN_LETTERS_PER_PAGE = 7;
   let lettersPage = 0;
   let openedLetterIndex = null;
   let fullscreenLetter = null;
@@ -1016,7 +1022,7 @@
     closeLetterFullscreen();
 
     const overlay = document.createElement('div');
-    overlay.className = 'letter-fullscreen';
+    overlay.className = `letter-fullscreen${letter.featured ? ' letter-fullscreen--featured' : ''}`;
     overlay.setAttribute('aria-hidden', 'false');
 
     overlay.innerHTML = `
@@ -1276,19 +1282,33 @@
   document.head.appendChild(fullscreenLetterStyle);
 
   function renderLetters() {
-    const totalPages = Math.max(1, Math.ceil(classmateLetters.length / LETTERS_PER_PAGE));
+    const regularLetters = classmateLetters.filter(letter => !letter.featured);
+    const featuredLetter = classmateLetters.find(letter => letter.featured);
+    const regularPages = Math.max(1, Math.ceil(regularLetters.length / MAIN_LETTERS_PER_PAGE));
+    const totalPages = featuredLetter ? regularPages + 1 : regularPages;
     lettersPage = Math.min(lettersPage, totalPages - 1);
 
-    const start = lettersPage * LETTERS_PER_PAGE;
-    const visibleLetters = classmateLetters.slice(start, start + LETTERS_PER_PAGE);
+    const isFinalPage = Boolean(featuredLetter) && lettersPage === totalPages - 1;
+    const start = lettersPage * MAIN_LETTERS_PER_PAGE;
+    const visibleLetters = isFinalPage
+      ? [featuredLetter]
+      : regularLetters.slice(start, start + MAIN_LETTERS_PER_PAGE);
+
+    lettersArchive.classList.toggle(
+      'is-final-page',
+      lettersPage === totalPages - 1
+    );
 
     envelopeGrid.innerHTML = '';
 
     visibleLetters.forEach((letter, localIndex) => {
-      const globalIndex = start + localIndex;
+      const globalIndex = classmateLetters.indexOf(letter);
       const envelope = document.createElement('button');
       envelope.type = 'button';
-      envelope.className = 'envelope';
+      envelope.className = `envelope${letter.featured ? ' envelope--featured' : ''}`;
+      if (letter.featured) {
+        envelope.classList.add('envelope--surprise');
+      }
       envelope.style.setProperty('--envelope-delay', `${localIndex * 70}ms`);
       envelope.setAttribute('aria-label', `Открыть письмо от ${letter.name}`);
       if (readLetters.has(globalIndex)) {
@@ -1309,7 +1329,13 @@
 
       const label = document.createElement('span');
       label.className = 'envelope-label';
-      label.textContent = `Для КА, с любовью от ${letter.name}`;
+      label.textContent = letter.featured
+        ? `Письмо издалека от ${letter.name}`
+        : `Для КА, с любовью от ${letter.name}`;
+
+      if (letter.featured) {
+        envelope.setAttribute('aria-label', `Особое письмо от ${letter.name}`);
+      }
 
       const readMark = document.createElement('span');
       readMark.className = 'envelope-read-mark';
@@ -1401,7 +1427,8 @@
   });
 
   lettersNext.addEventListener('click', () => {
-    const totalPages = Math.ceil(classmateLetters.length / LETTERS_PER_PAGE);
+    const regularLetters = classmateLetters.filter(letter => !letter.featured);
+    const totalPages = Math.ceil(regularLetters.length / MAIN_LETTERS_PER_PAGE) + 1;
     if (lettersPage < totalPages - 1) {
       lettersPage += 1;
       renderLetters();

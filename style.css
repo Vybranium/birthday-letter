@@ -862,6 +862,60 @@ h2 em,
 .envelope.is-read .envelope-seal{opacity:.18;transform:translate(-50%,-50%) scale(.76) rotate(8deg)}
 .envelope.is-read .envelope-label{opacity:.72}
 
+/* Особое письмо Насима: последний тихий сюрприз архива. */
+.envelope--featured{
+  grid-column:1/-1;
+  justify-self:center;
+  width:min(520px,100%);
+  min-height:205px;
+  border-color:rgba(208,174,120,.72);
+  background:linear-gradient(145deg,rgba(83,53,38,.72),#11100f 72%);
+  box-shadow:0 24px 55px rgba(0,0,0,.46),0 0 34px rgba(208,174,120,.1),inset 0 1px 0 rgba(255,255,255,.07);
+  transform:rotate(-.7deg) scale(1.015);
+}
+.envelope--featured::before{
+  content:"ОСОБОЕ ПИСЬМО";
+  position:absolute;
+  top:13px;
+  left:15px;
+  z-index:4;
+  color:var(--gold-bright);
+  font:8px 'DM Mono',monospace;
+  letter-spacing:.18em;
+}
+.envelope--featured .envelope-seal{width:55px;height:55px;border-color:var(--gold-bright);box-shadow:0 0 0 7px rgba(208,174,120,.07),0 0 30px rgba(208,174,120,.24)}
+.envelope--featured .envelope-seal::after{content:"✦";display:grid;place-items:center;position:absolute;inset:0;color:var(--gold-bright);font-size:18px}
+.envelope--featured .envelope-label{font-size:clamp(25px,2.6vw,36px);color:var(--cream)}
+.envelope--featured::after{
+  content:"";
+  position:absolute;
+  inset:20%;
+  z-index:0;
+  border:1px solid rgba(208,174,120,.34);
+  border-radius:50%;
+  opacity:0;
+  transform:scale(.55);
+  pointer-events:none;
+}
+.envelope--featured:hover{transform:translateY(-9px) rotate(0deg) scale(1.025);box-shadow:0 32px 70px rgba(0,0,0,.55),0 0 45px rgba(208,174,120,.16)}
+.envelope--featured.is-opening{animation:featuredEnvelopeOpen 1.35s var(--ease) both}
+.letters-archive:not(.is-final-page) .envelope--surprise{opacity:0;pointer-events:none}
+.letters-archive.is-open.is-final-page .envelope--surprise{animation:finalLetterArrival 3.4s var(--ease) .9s both}
+.letters-archive.is-open.is-final-page .envelope--surprise::after{animation:arrivalHalo 4.2s ease 1.35s both}
+.letters-archive.is-open.is-final-page .envelope--surprise .envelope-seal{animation:sealMajesty 3.6s ease 1.4s both}
+.letter-fullscreen--featured{background:radial-gradient(circle at 50% 24%,rgba(169,135,85,.18),transparent 36%),rgba(5,5,5,.98)}
+.letter-fullscreen--featured .letter-fullscreen-paper{border-color:rgba(208,174,120,.55);box-shadow:0 45px 120px rgba(0,0,0,.62),0 0 55px rgba(208,174,120,.08)}
+.letter-fullscreen--featured .letter-fullscreen-rule{width:88px;background:linear-gradient(90deg,var(--gold-bright),transparent)}
+.letter-fullscreen--featured .letter-fullscreen-label{color:var(--gold-bright)}
+.letter-fullscreen--featured .letter-fullscreen-message{animation:featuredMessageIn 1.6s var(--ease) .65s both}
+.letter-fullscreen--featured.is-visible .letter-fullscreen-paper{animation:featuredPaperArrival 2s var(--ease) both}
+@keyframes featuredEnvelopeOpen{0%{transform:rotate(-.7deg) scale(1.015)}35%{transform:rotate(1deg) translateY(-13px) scale(1.04);filter:brightness(1.3)}100%{transform:rotate(0) translateY(-4px) scale(1.02);filter:brightness(1)}}
+@keyframes featuredMessageIn{from{opacity:0;filter:blur(8px);transform:translateY(16px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+@keyframes featuredPaperArrival{0%{opacity:0;transform:translateY(34px) scale(.95) rotate(-1deg);filter:blur(8px)}55%{opacity:1;transform:translateY(-5px) scale(1.01) rotate(.35deg);filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+@keyframes finalLetterArrival{0%{opacity:0;transform:translateY(34px) rotate(-4deg) scale(.9);filter:blur(10px)}30%{opacity:.35;transform:translateY(12px) rotate(-2deg) scale(.95);filter:blur(5px)}62%{opacity:1;transform:translateY(-9px) rotate(1deg) scale(1.04);filter:blur(0);box-shadow:0 28px 70px rgba(0,0,0,.55),0 0 58px rgba(208,174,120,.24)}82%{transform:translateY(3px) rotate(-.2deg) scale(1.02)}100%{opacity:1;transform:translateY(0) rotate(-.7deg) scale(1.015)}}
+@keyframes arrivalHalo{0%{opacity:0;transform:scale(.45)}25%{opacity:.25}48%{opacity:1}100%{opacity:0;transform:scale(3)}}
+@keyframes sealMajesty{0%{transform:translate(-50%,-50%) scale(.5) rotate(-24deg);box-shadow:0 0 0 0 rgba(208,174,120,0)}35%{transform:translate(-50%,-50%) scale(.82) rotate(-10deg);box-shadow:0 0 0 6px rgba(208,174,120,.05),0 0 24px rgba(208,174,120,.18)}62%{transform:translate(-50%,-50%) scale(1.2) rotate(10deg);box-shadow:0 0 0 16px rgba(208,174,120,.13),0 0 54px rgba(208,174,120,.55)}82%{transform:translate(-50%,-50%) scale(.96) rotate(-3deg)}100%{transform:translate(-50%,-50%) scale(1) rotate(0);box-shadow:0 0 0 7px rgba(208,174,120,.07),0 0 30px rgba(208,174,120,.24)}}
+
 @keyframes coverOpen{0%{opacity:1;transform:rotate(-2deg) scale(1)}45%{transform:rotate(1deg) scale(1.035)}100%{opacity:0;transform:rotate(5deg) scale(1.12) translateY(-16px)}}
 @keyframes sealBreak{50%{transform:translate(-50%,-50%) scale(1.2) rotate(-12deg);filter:brightness(1.5)}100%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(18deg)}}
 @keyframes albumCardIn{from{opacity:.45;transform:translateX(18px) rotateY(-8deg)}to{opacity:1;transform:translateX(0) rotateY(0)}}
